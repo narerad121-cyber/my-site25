@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Equipment Pool Borrowing Form • Site 1</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>MedPark Hospital</h1>
+            <h2>Medical Equipment Pooling Borrowing Form</h2>
+            <p>แบบฟอร์มยืม-คืนเครื่องมือแพทย์ส่วนกลาง</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab active" data-tab="borrow" type="button" aria-controls="panel-borrow">Borrowing /
+                การยืม</button>
+            <button class="tab" data-tab="check" type="button" aria-controls="panel-check">Status / สถานะ</button>
+            <button class="tab" data-tab="return" type="button" aria-controls="panel-return">Returned / การคืน</button>
+        </div>
+
+        <section id="panel-borrow" class="card">
+            <form id="borrowForm" novalidate>
+                <div class="field">
+                    <label for="borrower">Employee Name / ID</label>
+                    <input id="borrower" autocomplete="name" required placeholder="เช่น 12345 หรือ ชื่อ-นามสกุล">
+                </div>
+                <div class="field">
+                    <label for="dept">Department / แผนก</label>
+                    <select id="dept" required>
+                        <option value="">เลือก</option>
+                    </select>
+                </div>
+
+                <div class="field request-type">
+                    <label>Request type / ประเภท</label>
+                    <div class="request-type-options">
+                        <label><input type="radio" name="rtype" value="normal" checked> <span>Normal</span></label>
+                        <label><input type="radio" name="rtype" value="standby"> <span>Standby</span></label>
+                    </div>
+                    <div class="hint">Standby: Call back later at 30016, 06-4237-3742</div>
+                </div>
+
+                <hr style="margin: 20px 0;">
+
+                <div id="borrowFormFields">
+                    <div class="field">
+                        <label for="equip">Medical Equipment / เครื่องมือแพทย์</label>
+                        <select id="equip" required>
+                            <option value="">เลือก</option>
+                            <option>Infusion Pump</option>
+                            <option>Syringe Pump</option>
+                            <option>Feeding Pump</option>
+                            <option>Pneumatic Pump (SCD)</option>
+                            <option>Vacuum Dressing : Curasys</option>
+                            <option>Vacuum Dressing : Renasys</option>
+                            <option>Versajet</option>
+                            <option>Alternating Pressure Mattress</option>
+                            <option>Telemetry Monitor</option>
+                        </select>
+                    </div>
+                    <div class="equipment-image-container" style="display:none;">
+                        <img id="equipmentImage" src="" alt="Equipment Image">
+                    </div>
+                    <div class="field">
+                        <label for="qty">Quantity / จำนวน</label>
+                        <input id="qty" type="number" min="1" value="1" required>
+                        <div class="hint">* No. of HN</div>
+                    </div>
+                    <div id="hnWrap" class="field">
+                        <label>HN</label>
+                        <div id="hnFields" class="hn-fields-container"></div>
+                        <div class="hint"></div>
+                    </div>
+                    <div id="needByField" class="field">
+                        <label for="need">Date and Time / วันและเวลาที่ต้องการใช้เครื่อง</label>
+                        <input id="need" type="datetime-local" required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="notes">Notes</label>
+                    <textarea id="notes" rows="3" placeholder="เช่น ไม่ต้องการเสา"></textarea>
+                </div>
+
+                <div class="btns">
+                    <button class="btn primary" type="submit" id="btnSubmit">Submit</button>
+                </div>
+                <p id="msg" class="muted" role="status" aria-live="polite"></p>
+            </form>
+        </section>
+
+        <section id="panel-check" class="card" hidden>
+            <div id="list" class="table-container">
+                <table id="requestsTable">
+                    <thead>
+                        <tr>
+                            <th class="filterable" data-column="id">ID<br><select id="filter-id"
+                                    class="table-filter-dropdown"></select></th>
+                            <th class="filterable" data-column="borrowerName">Requestor/Employee No.<br><select
+                                    id="filter-borrowerName" class="table-filter-dropdown"></select></th>
+                            <th class="filterable" data-column="department">Department<br><select id="filter-department"
+                                    class="table-filter-dropdown"></select></th>
+                            <th class="filterable" data-column="equipmentType">Equipment<br><select
+                                    id="filter-equipmentType" class="table-filter-dropdown"></select></th>
+                            <th class="filterable" data-column="quantity">Quantity</th>
+                            <th class="filterable" data-column="hnNumbers">HN</th>
+                            <th class="filterable" data-column="requiredTime">Require Before</th>
+                            <th class="filterable" data-column="status">Status<br><select id="filter-status"
+                                    class="table-filter-dropdown"></select></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <p id="status" class="muted" style="margin-top:8px"></p>
+        </section>
+
+        <section id="panel-return" class="card" hidden>
+            <form id="returnForm" novalidate>
+                <div class="field">
+                    <label for="returner">Employee No. / ชื่อผู้คืนเครื่องมือแพทย์</label>
+                    <input id="returner" autocomplete="name" required>
+                </div>
+                <div class="field">
+                    <label for="returnDept">Department / แผนก</label>
+                    <select id="returnDept" required>
+                        <option value="">เลือก</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label>Enter MPC Code / กรอกรหัส MPC Code</label>
+                    <div id="mpcCodeList"></div>
+                    <button type="button" class="btn secondary" id="addMpcBtn">+ คืนเครื่องเพิ่ม</button>
+                    <div style="margin-top: 10px; display: flex; align-items: center; justify-content: flex-end;">
+                        <button type="button" class="btn secondary" id="scanQrBtn">QR Code</button>
+                    </div>
+                </div>
+
+                <div id="qr-reader-container" style="width: 100%; display: none; margin-top: 10px;">
+                    <div id="qr-reader"></div>
+                </div>
+
+                <div class="field">
+                    <label for="returnNotes">Notes</label>
+                    <textarea id="returnNotes" rows="3"></textarea>
+                </div>
+
+                <div class="btns">
+                    <button class="btn primary" type="submit" id="btnReturnSubmit">Submit</button>
+                </div>
+                <p id="returnMsg" class="muted" role="status" aria-live="polite"></p>
+            </form>
+        </section>
+    </div>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
